@@ -1,0 +1,1270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>870</width>
+    <height>650</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>870</width>
+    <height>650</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>870</width>
+    <height>650</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>E-Puck Monitor</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QGroupBox" name="groupAccelerometer">
+    <property name="geometry">
+     <rect>
+      <x>540</x>
+      <y>10</y>
+      <width>301</width>
+      <height>231</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Accelerometer</string>
+    </property>
+    <widget class="QLabel" name="label_3">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>30</y>
+       <width>161</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Acceleration</string>
+     </property>
+    </widget>
+    <widget class="QLCDNumber" name="lcdAcceleration">
+     <property name="geometry">
+      <rect>
+       <x>150</x>
+       <y>30</y>
+       <width>91</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="segmentStyle">
+      <enum>QLCDNumber::Flat</enum>
+     </property>
+    </widget>
+    <widget class="QWidget" name="verticalLayoutWidget">
+     <property name="geometry">
+      <rect>
+       <x>70</x>
+       <y>70</y>
+       <width>151</width>
+       <height>141</height>
+      </rect>
+     </property>
+     <layout class="QVBoxLayout" name="layoutOpenGL"/>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_2">
+    <property name="geometry">
+     <rect>
+      <x>540</x>
+      <y>250</y>
+      <width>301</width>
+      <height>271</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Infrareds</string>
+    </property>
+    <widget class="QProgressBar" name="progressIR6">
+     <property name="geometry">
+      <rect>
+       <x>48</x>
+       <y>212</y>
+       <width>95</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="maximum">
+      <number>2000</number>
+     </property>
+     <property name="value">
+      <number>24</number>
+     </property>
+    </widget>
+    <widget class="QProgressBar" name="progressIR4">
+     <property name="geometry">
+      <rect>
+       <x>48</x>
+       <y>158</y>
+       <width>95</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="maximum">
+      <number>2000</number>
+     </property>
+     <property name="value">
+      <number>24</number>
+     </property>
+    </widget>
+    <widget class="QProgressBar" name="progressIR2">
+     <property name="geometry">
+      <rect>
+       <x>48</x>
+       <y>104</y>
+       <width>95</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="maximum">
+      <number>2000</number>
+     </property>
+     <property name="value">
+      <number>24</number>
+     </property>
+    </widget>
+    <widget class="QLabel" name="lblIR7">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>240</y>
+       <width>20</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>IR7</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="lblIR0">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>51</y>
+       <width>20</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>IR0</string>
+     </property>
+    </widget>
+    <widget class="QProgressBar" name="progressIR0">
+     <property name="geometry">
+      <rect>
+       <x>48</x>
+       <y>50</y>
+       <width>95</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="maximum">
+      <number>2000</number>
+     </property>
+     <property name="value">
+      <number>24</number>
+     </property>
+     <property name="invertedAppearance">
+      <bool>false</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="lblIR2">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>105</y>
+       <width>20</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>IR2</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="lblIR1">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>78</y>
+       <width>20</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>IR1</string>
+     </property>
+    </widget>
+    <widget class="QProgressBar" name="progressIR5">
+     <property name="geometry">
+      <rect>
+       <x>48</x>
+       <y>185</y>
+       <width>95</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="maximum">
+      <number>2000</number>
+     </property>
+     <property name="value">
+      <number>24</number>
+     </property>
+    </widget>
+    <widget class="QProgressBar" name="progressIR7">
+     <property name="geometry">
+      <rect>
+       <x>48</x>
+       <y>239</y>
+       <width>95</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="maximum">
+      <number>2000</number>
+     </property>
+     <property name="value">
+      <number>24</number>
+     </property>
+    </widget>
+    <widget class="QLabel" name="lblIR3">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>132</y>
+       <width>20</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>IR3</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="lblIR6">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>213</y>
+       <width>20</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>IR6</string>
+     </property>
+    </widget>
+    <widget class="QProgressBar" name="progressIR1">
+     <property name="geometry">
+      <rect>
+       <x>48</x>
+       <y>77</y>
+       <width>95</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="maximum">
+      <number>2000</number>
+     </property>
+     <property name="value">
+      <number>24</number>
+     </property>
+    </widget>
+    <widget class="QLabel" name="lblIR5">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>186</y>
+       <width>20</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>IR5</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="lblIR4">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>159</y>
+       <width>20</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>IR4</string>
+     </property>
+    </widget>
+    <widget class="QProgressBar" name="progressIR3">
+     <property name="geometry">
+      <rect>
+       <x>48</x>
+       <y>131</y>
+       <width>95</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="maximum">
+      <number>2000</number>
+     </property>
+     <property name="value">
+      <number>24</number>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_11">
+     <property name="geometry">
+      <rect>
+       <x>160</x>
+       <y>42</y>
+       <width>135</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Ambient light</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="lblIRaddress">
+     <property name="geometry">
+      <rect>
+       <x>270</x>
+       <y>165</y>
+       <width>58</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_7">
+     <property name="geometry">
+      <rect>
+       <x>193</x>
+       <y>190</y>
+       <width>69</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>IR data:</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="lblIRdata">
+     <property name="geometry">
+      <rect>
+       <x>270</x>
+       <y>190</y>
+       <width>58</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QLabel" name="lblIRcheck">
+     <property name="geometry">
+      <rect>
+       <x>270</x>
+       <y>140</y>
+       <width>58</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_5">
+     <property name="geometry">
+      <rect>
+       <x>193</x>
+       <y>140</y>
+       <width>69</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>IR check:</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_6">
+     <property name="geometry">
+      <rect>
+       <x>193</x>
+       <y>165</y>
+       <width>69</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>IR address:</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="lblLight">
+     <property name="geometry">
+      <rect>
+       <x>205</x>
+       <y>70</y>
+       <width>45</width>
+       <height>45</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_4">
+    <property name="geometry">
+     <rect>
+      <x>340</x>
+      <y>160</y>
+      <width>181</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Speaker</string>
+    </property>
+    <widget class="QPushButton" name="btn2">
+     <property name="geometry">
+      <rect>
+       <x>60</x>
+       <y>20</y>
+       <width>50</width>
+       <height>32</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>2</string>
+     </property>
+     <property name="icon">
+      <iconset resource="resources.qrc">
+       <normaloff>:/images/speaker.png</normaloff>:/images/speaker.png</iconset>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btn5">
+     <property name="geometry">
+      <rect>
+       <x>90</x>
+       <y>50</y>
+       <width>50</width>
+       <height>32</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>5</string>
+     </property>
+     <property name="icon">
+      <iconset resource="resources.qrc">
+       <normaloff>:/images/speaker.png</normaloff>:/images/speaker.png</iconset>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btn1">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>20</y>
+       <width>50</width>
+       <height>32</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string/>
+     </property>
+     <property name="text">
+      <string>1</string>
+     </property>
+     <property name="icon">
+      <iconset resource="resources.qrc">
+       <normaloff>:/images/speaker.png</normaloff>:/images/speaker.png</iconset>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btn4">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>50</y>
+       <width>50</width>
+       <height>32</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>4</string>
+     </property>
+     <property name="icon">
+      <iconset resource="resources.qrc">
+       <normaloff>:/images/speaker.png</normaloff>:/images/speaker.png</iconset>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btn3">
+     <property name="geometry">
+      <rect>
+       <x>120</x>
+       <y>20</y>
+       <width>50</width>
+       <height>32</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>3</string>
+     </property>
+     <property name="icon">
+      <iconset resource="resources.qrc">
+       <normaloff>:/images/speaker.png</normaloff>:/images/speaker.png</iconset>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_5">
+    <property name="geometry">
+     <rect>
+      <x>340</x>
+      <y>250</y>
+      <width>181</width>
+      <height>191</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Motors</string>
+    </property>
+    <widget class="QPushButton" name="btnUp">
+     <property name="geometry">
+      <rect>
+       <x>62</x>
+       <y>82</y>
+       <width>50</width>
+       <height>32</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>F</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="lblVel">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>30</y>
+       <width>154</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Velocity</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btnStop">
+     <property name="geometry">
+      <rect>
+       <x>62</x>
+       <y>116</y>
+       <width>50</width>
+       <height>32</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>S</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btnRight">
+     <property name="geometry">
+      <rect>
+       <x>114</x>
+       <y>116</y>
+       <width>51</width>
+       <height>32</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>R</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btnLeft">
+     <property name="geometry">
+      <rect>
+       <x>9</x>
+       <y>116</y>
+       <width>51</width>
+       <height>32</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>L</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btnDown">
+     <property name="geometry">
+      <rect>
+       <x>62</x>
+       <y>150</y>
+       <width>50</width>
+       <height>32</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>B</string>
+     </property>
+    </widget>
+    <widget class="QSlider" name="sliderVel">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>50</y>
+       <width>154</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="minimum">
+      <number>100</number>
+     </property>
+     <property name="maximum">
+      <number>1000</number>
+     </property>
+     <property name="value">
+      <number>500</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="tickPosition">
+      <enum>QSlider::NoTicks</enum>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_6">
+    <property name="geometry">
+     <rect>
+      <x>340</x>
+      <y>10</y>
+      <width>181</width>
+      <height>141</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>LEDs</string>
+    </property>
+    <widget class="QCheckBox" name="checkLed5">
+     <property name="geometry">
+      <rect>
+       <x>95</x>
+       <y>22</y>
+       <width>73</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>LED5</string>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="checkLed6">
+     <property name="geometry">
+      <rect>
+       <x>95</x>
+       <y>44</y>
+       <width>73</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>LED6</string>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="checkLed2">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>66</y>
+       <width>74</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>LED2</string>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="checkLed0">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>22</y>
+       <width>74</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>LED0</string>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="checkLed8">
+     <property name="geometry">
+      <rect>
+       <x>95</x>
+       <y>88</y>
+       <width>73</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>LED8</string>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="checkLed3">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>88</y>
+       <width>74</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>LED3</string>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="checkLed1">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>44</y>
+       <width>74</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>LED1</string>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="checkLed9">
+     <property name="geometry">
+      <rect>
+       <x>95</x>
+       <y>110</y>
+       <width>73</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>LED9</string>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="checkLed7">
+     <property name="geometry">
+      <rect>
+       <x>95</x>
+       <y>66</y>
+       <width>73</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>LED7</string>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="checkLed4">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>110</y>
+       <width>74</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>LED4</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_7">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>10</y>
+      <width>291</width>
+      <height>141</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>User</string>
+    </property>
+    <widget class="QLineEdit" name="txtPort">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>34</y>
+       <width>251</width>
+       <height>22</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btnDisconnect">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>150</x>
+       <y>60</y>
+       <width>130</width>
+       <height>32</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Disconnect</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btnConnect">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>60</y>
+       <width>131</width>
+       <height>32</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Connect</string>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="chkSensors">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>110</y>
+       <width>141</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Activate sensors</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_8">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>160</y>
+      <width>291</width>
+      <height>431</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Camera</string>
+    </property>
+    <widget class="QPushButton" name="btnImage">
+     <property name="geometry">
+      <rect>
+       <x>45</x>
+       <y>30</y>
+       <width>201</width>
+       <height>32</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Start receiving images</string>
+     </property>
+    </widget>
+    <widget class="QScrollArea" name="scrollCamera">
+     <property name="geometry">
+      <rect>
+       <x>45</x>
+       <y>70</y>
+       <width>200</width>
+       <height>200</height>
+      </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>200</width>
+       <height>200</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>200</width>
+       <height>200</height>
+      </size>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="verticalScrollBarPolicy">
+      <enum>Qt::ScrollBarAlwaysOn</enum>
+     </property>
+     <property name="horizontalScrollBarPolicy">
+      <enum>Qt::ScrollBarAlwaysOn</enum>
+     </property>
+     <property name="widgetResizable">
+      <bool>false</bool>
+     </property>
+     <widget class="QWidget" name="scrollAreaWidgetContents">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>196</width>
+        <height>196</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QLineEdit" name="txtZoom">
+     <property name="geometry">
+      <rect>
+       <x>68</x>
+       <y>359</y>
+       <width>112</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>8</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="txtHeight">
+     <property name="geometry">
+      <rect>
+       <x>68</x>
+       <y>295</y>
+       <width>112</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>40</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="txtWidth">
+     <property name="geometry">
+      <rect>
+       <x>68</x>
+       <y>327</y>
+       <width>112</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>40</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btnParameters">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>391</y>
+       <width>191</width>
+       <height>32</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Send Paramters</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_8">
+     <property name="geometry">
+      <rect>
+       <x>18</x>
+       <y>295</y>
+       <width>42</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Height</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_9">
+     <property name="geometry">
+      <rect>
+       <x>18</x>
+       <y>327</y>
+       <width>42</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Width</string>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="radioColor">
+     <property name="geometry">
+      <rect>
+       <x>190</x>
+       <y>296</y>
+       <width>85</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Color</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="radioGrayscale">
+     <property name="geometry">
+      <rect>
+       <x>190</x>
+       <y>328</y>
+       <width>85</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Grayscale</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_10">
+     <property name="geometry">
+      <rect>
+       <x>18</x>
+       <y>359</y>
+       <width>42</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Zoom</string>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="chkRotate">
+     <property name="geometry">
+      <rect>
+       <x>190</x>
+       <y>360</y>
+       <width>94</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Rotate</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_9">
+    <property name="geometry">
+     <rect>
+      <x>540</x>
+      <y>530</y>
+      <width>301</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Selector</string>
+    </property>
+    <widget class="QLabel" name="label_4">
+     <property name="geometry">
+      <rect>
+       <x>23</x>
+       <y>30</y>
+       <width>69</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Selector:</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="lblSelector">
+     <property name="geometry">
+      <rect>
+       <x>110</x>
+       <y>30</y>
+       <width>58</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QDial" name="dialSelector">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>220</x>
+       <y>22</y>
+       <width>35</width>
+       <height>35</height>
+      </rect>
+     </property>
+     <property name="maximum">
+      <number>16</number>
+     </property>
+     <property name="pageStep">
+      <number>1</number>
+     </property>
+     <property name="wrapping">
+      <bool>true</bool>
+     </property>
+     <property name="notchTarget">
+      <double>1.000000000000000</double>
+     </property>
+     <property name="notchesVisible">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_3">
+    <property name="geometry">
+     <rect>
+      <x>340</x>
+      <y>450</y>
+      <width>181</width>
+      <height>141</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Microphones</string>
+    </property>
+    <widget class="QLabel" name="lblMic1">
+     <property name="geometry">
+      <rect>
+       <x>80</x>
+       <y>120</y>
+       <width>32</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Mic1</string>
+     </property>
+    </widget>
+    <widget class="QProgressBar" name="progressMic0">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>29</y>
+       <width>20</width>
+       <height>90</height>
+      </rect>
+     </property>
+     <property name="maximum">
+      <number>1500</number>
+     </property>
+     <property name="value">
+      <number>24</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+    </widget>
+    <widget class="QProgressBar" name="progressMic1">
+     <property name="geometry">
+      <rect>
+       <x>80</x>
+       <y>30</y>
+       <width>20</width>
+       <height>90</height>
+      </rect>
+     </property>
+     <property name="maximum">
+      <number>1500</number>
+     </property>
+     <property name="value">
+      <number>24</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+    </widget>
+    <widget class="QProgressBar" name="progressMic2">
+     <property name="geometry">
+      <rect>
+       <x>140</x>
+       <y>29</y>
+       <width>20</width>
+       <height>90</height>
+      </rect>
+     </property>
+     <property name="maximum">
+      <number>1500</number>
+     </property>
+     <property name="value">
+      <number>24</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+    </widget>
+    <widget class="QLabel" name="lblMic2">
+     <property name="geometry">
+      <rect>
+       <x>140</x>
+       <y>120</y>
+       <width>32</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Mic2</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="lblMic0">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>120</y>
+       <width>32</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Mic0</string>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>870</width>
+     <height>22</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
+ <connections/>
+</ui>
