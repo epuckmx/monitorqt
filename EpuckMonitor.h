@@ -46,6 +46,10 @@ class EpuckMonitor : public QMainWindow
 {
     Q_OBJECT
 	
+    private:
+        int filter; ///< -1: no filter, 0: red filter, 1: green filter, 2: blue filter
+        int preFilter; ///< -1: no filter, 0: average, 1: median
+
     public:
         EpuckMonitor(QMainWindow *parent=0);
         ~EpuckMonitor();
@@ -85,6 +89,8 @@ class EpuckMonitor : public QMainWindow
         void getImages();				/**< called when the "Get Image" button is clicked; start the "cameraThread" in order to receive an image from the robot*/
         void printMessage(QString s);
         void portOpened();
+        void onFilter();
+        void onPreFilter();
 
     signals:
         void newParameters(int t, int w, int h, int z);

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>870</width>
-    <height>650</height>
+    <width>1000</width>
+    <height>700</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -18,14 +18,14 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>870</width>
-    <height>650</height>
+    <width>1000</width>
+    <height>700</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>870</width>
-    <height>650</height>
+    <width>1000</width>
+    <height>700</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -35,7 +35,7 @@
    <widget class="QGroupBox" name="groupAccelerometer">
     <property name="geometry">
      <rect>
-      <x>540</x>
+      <x>680</x>
       <y>10</y>
       <width>301</width>
       <height>231</height>
@@ -85,7 +85,7 @@
    <widget class="QGroupBox" name="groupBox_2">
     <property name="geometry">
      <rect>
-      <x>540</x>
+      <x>680</x>
       <y>250</y>
       <width>301</width>
       <height>271</height>
@@ -440,7 +440,7 @@
    <widget class="QGroupBox" name="groupBox_4">
     <property name="geometry">
      <rect>
-      <x>340</x>
+      <x>470</x>
       <y>160</y>
       <width>181</width>
       <height>81</height>
@@ -541,7 +541,7 @@
    <widget class="QGroupBox" name="groupBox_5">
     <property name="geometry">
      <rect>
-      <x>340</x>
+      <x>470</x>
       <y>250</y>
       <width>181</width>
       <height>191</height>
@@ -660,7 +660,7 @@
    <widget class="QGroupBox" name="groupBox_6">
     <property name="geometry">
      <rect>
-      <x>340</x>
+      <x>470</x>
       <y>10</y>
       <width>181</width>
       <height>141</height>
@@ -989,7 +989,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>Send Paramters</string>
+      <string>Send Parameters</string>
      </property>
     </widget>
     <widget class="QLabel" name="label_8">
@@ -1077,7 +1077,7 @@
    <widget class="QGroupBox" name="groupBox_9">
     <property name="geometry">
      <rect>
-      <x>540</x>
+      <x>680</x>
       <y>530</y>
       <width>301</width>
       <height>61</height>
@@ -1144,7 +1144,7 @@
    <widget class="QGroupBox" name="groupBox_3">
     <property name="geometry">
      <rect>
-      <x>340</x>
+      <x>470</x>
       <y>450</y>
       <width>181</width>
       <height>141</height>
@@ -1250,13 +1250,130 @@
      </property>
     </widget>
    </widget>
+   <widget class="QGroupBox" name="groupBox">
+    <property name="geometry">
+     <rect>
+      <x>330</x>
+      <y>160</y>
+      <width>120</width>
+      <height>191</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Filters</string>
+    </property>
+    <widget class="QRadioButton" name="radioRedFilter">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>30</y>
+       <width>102</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Red Filter</string>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="radioGreenFilter">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>70</y>
+       <width>102</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Green Filter</string>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="radioBlueFilter">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>110</y>
+       <width>102</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Blue Filter</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btnApplyFilter">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>150</y>
+       <width>115</width>
+       <height>32</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Apply</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_10">
+    <property name="geometry">
+     <rect>
+      <x>330</x>
+      <y>360</y>
+      <width>120</width>
+      <height>171</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Pre filter</string>
+    </property>
+    <widget class="QRadioButton" name="radioAverage">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>30</y>
+       <width>102</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Average</string>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="radioMedian">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>70</y>
+       <width>102</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Median</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btnApplyPreFilter">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>110</y>
+       <width>115</width>
+       <height>32</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Apply</string>
+     </property>
+    </widget>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>870</width>
+     <width>1000</width>
      <height>22</height>
     </rect>
    </property>

@@ -70,6 +70,13 @@ EpuckMonitor::EpuckMonitor(QMainWindow *parent) : QMainWindow(parent)
     ui.txtZoom->setEnabled(false);
     ui.radioColor->setEnabled(false);
     ui.radioGrayscale->setEnabled(false);
+    ui.radioAverage->setEnabled(false);
+    ui.radioMedian->setEnabled(false);
+    ui.btnApplyPreFilter->setEnabled(false);
+    ui.radioRedFilter->setEnabled(false);
+    ui.radioGreenFilter->setEnabled(false);
+    ui.radioBlueFilter->setEnabled(false);
+    ui.btnApplyFilter->setEnabled(false);
 
     glWidget = new GLWidget;
     ui.layoutOpenGL->addWidget(glWidget);
@@ -89,7 +96,6 @@ void EpuckMonitor::connect() {
     emit connectToRobot(ui.txtPort->text().toLatin1().data());
     return;
 }
-
 
 void EpuckMonitor::cameraUpdate() {
 
@@ -215,6 +221,30 @@ void EpuckMonitor::updateParameters() {
     return;
 }
 
+void EpuckMonitor::onFilter() {
+    if (ui.radioRedFilter->isChecked()) {
+        filter = 0;
+    } else if (ui.radioGreenFilter->isChecked()) {
+        filter = 1;
+    } else if (ui.radioBlueFilter->isChecked()) {
+        filter = 2;
+    } else {
+        filter = -1;
+    }
+    return;
+}
+
+void EpuckMonitor::onPreFilter() {
+    if (ui.radioAverage->isChecked()) {
+        preFilter = 0;
+    } else if (ui.radioMedian->isChecked()) {
+        preFilter = 1;
+    } else {
+        preFilter = -1;
+    }
+    return;
+}
+
 void EpuckMonitor::goUp() {
 
     int speed_left = motorSpeed;
@@ -314,6 +344,13 @@ void EpuckMonitor::disconnect() {
     ui.txtZoom->setEnabled(false);
     ui.radioColor->setEnabled(false);
     ui.radioGrayscale->setEnabled(false);
+    ui.radioAverage->setEnabled(false);
+    ui.radioMedian->setEnabled(false);
+    ui.btnApplyPreFilter->setEnabled(false);
+    ui.radioRedFilter->setEnabled(false);
+    ui.radioGreenFilter->setEnabled(false);
+    ui.radioBlueFilter->setEnabled(false);
+    ui.btnApplyFilter->setEnabled(false);
     ui.btnImage->setText("Start receiving images");
 
     return;
@@ -390,6 +427,13 @@ void EpuckMonitor::portOpened() {
     ui.txtZoom->setEnabled(true);
     ui.radioColor->setEnabled(true);
     ui.radioGrayscale->setEnabled(true);
+    ui.radioAverage->setEnabled(true);
+    ui.radioMedian->setEnabled(true);
+    ui.btnApplyPreFilter->setEnabled(true);
+    ui.radioRedFilter->setEnabled(true);
+    ui.radioGreenFilter->setEnabled(true);
+    ui.radioBlueFilter->setEnabled(true);
+    ui.btnApplyFilter->setEnabled(true);
 }
 
 
