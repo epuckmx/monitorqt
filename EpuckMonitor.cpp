@@ -97,11 +97,58 @@ void EpuckMonitor::connect() {
     return;
 }
 
+void EpuckMonitor::getColorsForIndex(int index, int &r, int &g, int &b) {
+    r = (int)imgBuffer[index * 2] & 0xF8;
+    g = (int)(imgBuffer[index * 2] & 0x07) << 5 | (imgBuffer[index * 2 + 1] & 0xE0) >> 3;
+    b = (int)(imgBuffer[index * 2 + 1] & 0x1F) << 3;
+}
+
+void EpuckMonitor::setColorsAtIndex(int index, int r, int g, int b) {
+    cpImgBuffer[index * 2] = (0xF8 & (char)r) | (0x07 & ((char)g >> 5));
+    cpImgBuffer[index * 2 + 1] = (0x1F & ((char)b >> 3)) | (0xE0 & ((char)g << 5));
+}
+
+void EpuckMonitor::onPreFilter() {
+    switch (preFilter) {
+    case 0: {
+        memcpy(cpImgBuffer, imgBuffer, 4050);
+        for (int i = 1; i < height - 1; ++i) {
+            for (int j = 1; j < width - 1; ++j) {
+                int rA = 0, gA = 0, bA = 0;
+                int indexes[9];
+                indexes[0] = (i - 1) * width + (j - 1);
+                indexes[1] = (i - 1) * width + j;
+                indexes[2] = (i - 1) * width + (j + 1);
+                indexes[3] = i * width + (j - 1);
+                indexes[4] = i * width + j;
+                indexes[5] = i * width + (j + 1);
+                indexes[6] = (i + 1) * width + (j - 1);
+                indexes[7] = (i + 1) * witdh + j;
+                indexes[8] = (i + 1) * width + (j + 1);
+                for (int k = 0; k < 9; ++k) {
+                    int r, g, b;
+                    getColorsForIndex(indexes[k], r, g, b);
+                    rA += r;
+                    gA += g;
+                    bA += b;
+                }
+                rA /= 9;
+                gA /= 9;
+                bA /= 9;
+            }
+        }
+        memcpy(imgBuffer, cpImgBuffer, 4050);
+        break;
+    }
+    }
+}
+
 void EpuckMonitor::cameraUpdate() {
 
     switch(type) {
         case 0: {	//grayscale
                     commThread->getImg(imgBuffer);
+                    onPreFilter();
                     img = QImage(width, height, QImage::Format_RGB32);
                     int i=0;
                     for(int y=0; y<height; y++) {
