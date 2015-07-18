@@ -94,8 +94,8 @@ class EpuckMonitor : public QMainWindow
         void getImages();				/**< called when the "Get Image" button is clicked; start the "cameraThread" in order to receive an image from the robot*/
         void printMessage(QString s);
         void portOpened();
-        void onFilter();
-        void onPreFilter();
+        void applyFilter();
+        void applyPreFilter();
 
     signals:
         void newParameters(int t, int w, int h, int z);

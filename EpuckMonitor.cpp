@@ -26,6 +26,8 @@
 
 
 #include "EpuckMonitor.h"
+#include <vector>
+#include <algorithm>
 
 EpuckMonitor::EpuckMonitor(QMainWindow *parent) : QMainWindow(parent)
 {
@@ -72,10 +74,12 @@ EpuckMonitor::EpuckMonitor(QMainWindow *parent) : QMainWindow(parent)
     ui.radioGrayscale->setEnabled(false);
     ui.radioAverage->setEnabled(false);
     ui.radioMedian->setEnabled(false);
+    ui.radioNonePreFilter->setEnabled(false);
     ui.btnApplyPreFilter->setEnabled(false);
     ui.radioRedFilter->setEnabled(false);
     ui.radioGreenFilter->setEnabled(false);
     ui.radioBlueFilter->setEnabled(false);
+    ui.radioNoneFilter->setEnabled(false);
     ui.btnApplyFilter->setEnabled(false);
 
     glWidget = new GLWidget;
@@ -105,17 +109,68 @@ void EpuckMonitor::getColorsForIndex(int index, int &r, int &g, int &b) {
 
 void EpuckMonitor::setColorsAtIndex(int index, int r, int g, int b) {
     cpImgBuffer[index * 2] = (0xF8 & (char)r) | (0x07 & ((char)g >> 5));
-    cpImgBuffer[index * 2 + 1] = (0x1F & ((char)b >> 3)) | (0xE0 & ((char)g << 5));
+    cpImgBuffer[index * 2 + 1] = (0x1F & ((char)b >> 3)) | (0xE0 & ((char)g << 3));
+}
+
+void EpuckMonitor::onColorFilter() {
+    switch (filter) {
+    case 0: { // red
+        memcpy(cpImgBuffer, imgBuffer, 4050);
+        for (int i = 0; i < height; ++i) {
+            for (int j = 0; j < width; ++j) {
+                int r, g, b;
+                int index = i * width + j;
+                getColorsForIndex(index, r, g, b);
+                int rN = (r - g) + (r - b);
+                if (rN < 0) rN = 0; else if (rN > 255) rN = 255;
+                setColorsAtIndex(index, rN, 0, 0);
+            }
+        }
+        memcpy(imgBuffer, cpImgBuffer, 4050);
+        break;
+    }
+    case 1: { // green
+        memcpy(cpImgBuffer, imgBuffer, 4050);
+        for (int i = 0; i < height; ++i) {
+            for (int j = 0; j < width; ++j) {
+                int r, g, b;
+                int index = i * width + j;
+                getColorsForIndex(index, r, g, b);
+                int gN = (g - r) + (g - b);
+                if (gN < 0) gN = 0; else if (gN > 255) gN = 255;
+                setColorsAtIndex(index, 0, gN, 0);
+            }
+        }
+        memcpy(imgBuffer, cpImgBuffer, 4050);
+        break;
+    }
+    case 2: { // blue
+        memcpy(cpImgBuffer, imgBuffer, 4050);
+        for (int i = 0; i < height; ++i) {
+            for (int j = 0; j < width; ++j) {
+                int r, g, b;
+                int index = i * width + j;
+                getColorsForIndex(index, r, g, b);
+                int bN = (b - r) + (b - g);
+                if (bN < 0) bN = 0; else if (bN > 255) bN = 255;
+                setColorsAtIndex(index, 0, 0, bN);
+            }
+        }
+        memcpy(imgBuffer, cpImgBuffer, 4050);
+        break;
+    }
+    }
 }
 
 void EpuckMonitor::onPreFilter() {
     switch (preFilter) {
-    case 0: {
+    case 0: { // Average
         memcpy(cpImgBuffer, imgBuffer, 4050);
         for (int i = 1; i < height - 1; ++i) {
             for (int j = 1; j < width - 1; ++j) {
                 int rA = 0, gA = 0, bA = 0;
                 int indexes[9];
+                int factors[9] = {1, 2, 1, 2, 4, 2, 1, 2, 1};
                 indexes[0] = (i - 1) * width + (j - 1);
                 indexes[1] = (i - 1) * width + j;
                 indexes[2] = (i - 1) * width + (j + 1);
@@ -123,18 +178,56 @@ void EpuckMonitor::onPreFilter() {
                 indexes[4] = i * width + j;
                 indexes[5] = i * width + (j + 1);
                 indexes[6] = (i + 1) * width + (j - 1);
-                indexes[7] = (i + 1) * witdh + j;
+                indexes[7] = (i + 1) * width + j;
                 indexes[8] = (i + 1) * width + (j + 1);
+                int weights = 0;
                 for (int k = 0; k < 9; ++k) {
                     int r, g, b;
                     getColorsForIndex(indexes[k], r, g, b);
-                    rA += r;
-                    gA += g;
-                    bA += b;
+                    rA += factors[k] * r;
+                    gA += factors[k] * g;
+                    bA += factors[k] * b;
+                    weights += factors[k];
                 }
-                rA /= 9;
-                gA /= 9;
-                bA /= 9;
+                rA /= weights;
+                gA /= weights;
+                bA /= weights;
+                setColorsAtIndex(indexes[4], rA, gA, bA);
+            }
+        }
+        memcpy(imgBuffer, cpImgBuffer, 4050);
+        break;
+    }
+    case 1: { // Median
+        memcpy(cpImgBuffer, imgBuffer, 4050);
+        int indexes[9];
+        for (int i = 0; i < height - 1; ++i) {
+            for (int j = 0; j < width - 1; ++j) {
+                int rM, gM, bM;
+                indexes[0] = (i - 1) * width + (j - 1);
+                indexes[1] = (i - 1) * width + j;
+                indexes[2] = (i - 1) * width + (j + 1);
+                indexes[3] = i * width + (j - 1);
+                indexes[4] = i * width + j;
+                indexes[5] = i * width + (j + 1);
+                indexes[6] = (i + 1) * width + (j - 1);
+                indexes[7] = (i + 1) * width + j;
+                indexes[8] = (i + 1) * width + (j + 1);
+                std::vector<int> rs, gs, bs;
+                for (int k = 0; k < 9; ++k) {
+                    int r, g, b;
+                    getColorsForIndex(indexes[k], r, g, b);
+                    rs.push_back(r);
+                    gs.push_back(g);
+                    bs.push_back(b);
+                }
+                std::sort(rs.begin(), rs.end());
+                std::sort(gs.begin(), gs.end());
+                std::sort(bs.begin(), bs.end());
+                rM = rs[4];
+                gM = gs[4];
+                bM = bs[4];
+                setColorsAtIndex(indexes[4], rM, gM, bM);
             }
         }
         memcpy(imgBuffer, cpImgBuffer, 4050);
@@ -148,7 +241,6 @@ void EpuckMonitor::cameraUpdate() {
     switch(type) {
         case 0: {	//grayscale
                     commThread->getImg(imgBuffer);
-                    onPreFilter();
                     img = QImage(width, height, QImage::Format_RGB32);
                     int i=0;
                     for(int y=0; y<height; y++) {
@@ -170,6 +262,8 @@ void EpuckMonitor::cameraUpdate() {
 
         case 1: {	// RGB565 image
                     commThread->getImg(imgBuffer);
+                    onPreFilter();
+                    onColorFilter();
                     img = QImage(width, height, QImage::Format_RGB16);
                     int i=0;
                     for(int y=0; y<height; y++) {
@@ -268,25 +362,25 @@ void EpuckMonitor::updateParameters() {
     return;
 }
 
-void EpuckMonitor::onFilter() {
+void EpuckMonitor::applyFilter() {
     if (ui.radioRedFilter->isChecked()) {
         filter = 0;
     } else if (ui.radioGreenFilter->isChecked()) {
         filter = 1;
     } else if (ui.radioBlueFilter->isChecked()) {
         filter = 2;
-    } else {
+    } else if (ui.radioNoneFilter->isChecked()) {
         filter = -1;
     }
     return;
 }
 
-void EpuckMonitor::onPreFilter() {
+void EpuckMonitor::applyPreFilter() {
     if (ui.radioAverage->isChecked()) {
         preFilter = 0;
     } else if (ui.radioMedian->isChecked()) {
         preFilter = 1;
-    } else {
+    } else if (ui.radioNonePreFilter->isChecked()) {
         preFilter = -1;
     }
     return;
@@ -393,10 +487,12 @@ void EpuckMonitor::disconnect() {
     ui.radioGrayscale->setEnabled(false);
     ui.radioAverage->setEnabled(false);
     ui.radioMedian->setEnabled(false);
+    ui.radioNonePreFilter->setEnabled(false);
     ui.btnApplyPreFilter->setEnabled(false);
     ui.radioRedFilter->setEnabled(false);
     ui.radioGreenFilter->setEnabled(false);
     ui.radioBlueFilter->setEnabled(false);
+    ui.radioNoneFilter->setEnabled(false);
     ui.btnApplyFilter->setEnabled(false);
     ui.btnImage->setText("Start receiving images");
 
@@ -476,10 +572,12 @@ void EpuckMonitor::portOpened() {
     ui.radioGrayscale->setEnabled(true);
     ui.radioAverage->setEnabled(true);
     ui.radioMedian->setEnabled(true);
+    ui.radioNonePreFilter->setEnabled(true);
     ui.btnApplyPreFilter->setEnabled(true);
     ui.radioRedFilter->setEnabled(true);
     ui.radioGreenFilter->setEnabled(true);
     ui.radioBlueFilter->setEnabled(true);
+    ui.radioNoneFilter->setEnabled(true);
     ui.btnApplyFilter->setEnabled(true);
 }
 

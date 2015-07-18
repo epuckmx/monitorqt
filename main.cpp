@@ -41,8 +41,8 @@ int main(int argc, char *argv[]) {
 	QObject::connect(main.ui.btnConnect, SIGNAL(clicked()), &main, SLOT(connect()));
 	QObject::connect(main.ui.btnDisconnect, SIGNAL(clicked()), &main, SLOT(disconnect()));
 	QObject::connect(main.ui.btnParameters, SIGNAL(clicked()), &main, SLOT(updateParameters()));
-    QObject::connect(main.ui.btnApplyFilter, SIGNAL(clicked()), &main, SLOT(onFilter()));
-    QObject::connect(main.ui.btnApplyPreFilter, SIGNAL(clicked()), &main, SLOT(onPreFilter()));
+    QObject::connect(main.ui.btnApplyFilter, SIGNAL(clicked()), &main, SLOT(applyFilter()));
+    QObject::connect(main.ui.btnApplyPreFilter, SIGNAL(clicked()), &main, SLOT(applyPreFilter()));
     QObject::connect(&main, SIGNAL(newParameters(int,int,int,int)), commThread, SLOT(updateParameters(int,int,int,int)));
 	QObject::connect(main.ui.btnUp, SIGNAL(clicked()), &main, SLOT(goUp()));
 	QObject::connect(main.ui.btnDown, SIGNAL(clicked()), &main, SLOT(goDown()));

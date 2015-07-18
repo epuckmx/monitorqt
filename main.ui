@@ -1256,7 +1256,7 @@
       <x>330</x>
       <y>160</y>
       <width>120</width>
-      <height>191</height>
+      <height>221</height>
      </rect>
     </property>
     <property name="title">
@@ -1305,7 +1305,7 @@
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>150</y>
+       <y>180</y>
        <width>115</width>
        <height>32</height>
       </rect>
@@ -1314,14 +1314,30 @@
       <string>Apply</string>
      </property>
     </widget>
+    <widget class="QRadioButton" name="radioNoneFilter">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>150</y>
+       <width>102</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>None</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
    </widget>
    <widget class="QGroupBox" name="groupBox_10">
     <property name="geometry">
      <rect>
       <x>330</x>
-      <y>360</y>
+      <y>390</y>
       <width>120</width>
-      <height>171</height>
+      <height>201</height>
      </rect>
     </property>
     <property name="title">
@@ -1357,13 +1373,29 @@
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>110</y>
+       <y>150</y>
        <width>115</width>
        <height>32</height>
       </rect>
      </property>
      <property name="text">
       <string>Apply</string>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="radioNonePreFilter">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>110</y>
+       <width>102</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>None</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
      </property>
     </widget>
    </widget>
