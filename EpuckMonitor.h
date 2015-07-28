@@ -51,6 +51,9 @@ class EpuckMonitor : public QMainWindow
         int preFilter; ///< -1: no filter, 0: average, 1: median
         void onPreFilter();
         void onColorFilter();
+        void onCustomFilter();
+        void onEdgeDetection();
+        void onObjectIdentification();
         void getColorsForIndex(int index, int& r, int& g, int& b);
         void setColorsAtIndex(int index, int r, int g, int b);
         unsigned char cpImgBuffer[4050];

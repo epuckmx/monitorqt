@@ -28,9 +28,14 @@
 #include "EpuckMonitor.h"
 #include <vector>
 #include <algorithm>
+#include <stdlib.h>
+#include <time.h>
+
 
 EpuckMonitor::EpuckMonitor(QMainWindow *parent) : QMainWindow(parent)
 {
+
+    srand(time(NULL));
     ui.setupUi(this);
     motorSpeed=500;
     lblCamera = new QLabel();
@@ -120,10 +125,14 @@ void EpuckMonitor::onColorFilter() {
             for (int j = 0; j < width; ++j) {
                 int r, g, b;
                 int index = i * width + j;
-                getColorsForIndex(index, r, g, b);
-                int rN = (r - g) + (r - b);
-                if (rN < 0) rN = 0; else if (rN > 255) rN = 255;
-                setColorsAtIndex(index, rN, 0, 0);
+                if ((i == 0 || i == height - 1) && (j == 0 || j == width - 1)) {
+                    setColorsAtIndex(index, 0, 0, 0);
+                } else {
+                    getColorsForIndex(index, r, g, b);
+                    int rN = (r - g) + (r - b);
+                    if (rN < 40) rN = 0; else rN = 255;
+                    setColorsAtIndex(index, rN, 0, 0);
+                }
             }
         }
         memcpy(imgBuffer, cpImgBuffer, 4050);
@@ -154,6 +163,177 @@ void EpuckMonitor::onColorFilter() {
                 int bN = (b - r) + (b - g);
                 if (bN < 0) bN = 0; else if (bN > 255) bN = 255;
                 setColorsAtIndex(index, 0, 0, bN);
+            }
+        }
+        memcpy(imgBuffer, cpImgBuffer, 4050);
+        break;
+    }
+    }
+}
+
+void EpuckMonitor::onCustomFilter() {
+    switch (filter) {
+    case 0: {
+        memcpy(cpImgBuffer, imgBuffer, 4050);
+        int indexes[5];
+        for (int i = 1; i < height - 1; ++i) {
+            for (int j = 1; j < width - 1; ++j) {
+                indexes[1] = (i - 1) * width + j;
+                indexes[2] = i * width + (j - 1);
+                indexes[0] = i * width + j;
+                indexes[3] = i * width + (j + 1);
+                indexes[4] = (i + 1) * width + j;
+                int r, g, b;
+                getColorsForIndex(indexes[0], r, g, b);
+                if (r > 40) {
+                    int counter = 0;
+                    for (int k = 0; k < 4; ++k) {
+                        getColorsForIndex(indexes[k + 1], r, g, b);
+                        if (r > 40) counter++;
+                    }
+                    if (counter < 3) {
+                        setColorsAtIndex(indexes[0], 0, 0, 0);
+                    }
+                }
+            }
+        }
+        memcpy(imgBuffer, cpImgBuffer, 4050);
+        break;
+    }
+    }
+}
+
+struct Rect {
+    int x;
+    int y;
+    int w;
+    int h;
+};
+
+std::vector<Rect> objects;
+
+void EpuckMonitor::onObjectIdentification() {
+    switch (filter) {
+    case 0: {
+        objects.clear();
+        memcpy(cpImgBuffer, imgBuffer, 4050);
+        // Just one
+        int iteration = 0;
+        int size = width * height;
+        bool objectDetected = false;
+        while (!objectDetected && iteration < size / 2) {
+            int index = rand() % size;
+            int ix = index % width;
+            int iy = index / width;
+            if (ix == 0 || ix == width -1 || iy == 0 || iy == height - 1) continue;
+            int r, g, b;
+            getColorsForIndex(index, r, g, b);
+            if (r > 0) {
+                int hu = iy, wr = ix, hd = iy, wl = ix;
+                int rr = r, gr = g, br = b;
+                while (rr > 0) {
+                    hu--;
+                    if (hu > 0) {
+                        getColorsForIndex(hu * width + ix, rr, gr, br);
+                        if (rr == 0) {
+                            hu++;
+                            break;
+                        }
+                    } else {
+                        hu++;
+                        break;
+                    }
+                }
+                rr = r;
+                while (rr > 0) {
+                    wr++;
+                    if (wr < width - 1) {
+                        getColorsForIndex(iy * width + wr, rr, gr, br);
+                        if (rr == 0) {
+                            wr--;
+                            break;
+                        }
+                    } else {
+                        wr--;
+                        break;
+                    }
+                }
+                rr = r;
+                while (rr > 0) {
+                    hd++;
+                    if (hd < height - 1) {
+                        getColorsForIndex(hd * width + ix, rr, gr, br);
+                        if (rr == 0) {
+                            hd--;
+                            break;
+                        }
+                    } else {
+                        hd--;
+                        break;
+                    }
+                }
+                rr = r;
+                while (rr > 0) {
+                    wl--;
+                    if (wl > 0) {
+                        getColorsForIndex(iy * width + wl, rr, gr, br);
+                        if (rr == 0) {
+                            wl++;
+                            break;
+                        }
+                    } else {
+                        wl++;
+                        break;
+                    }
+                }
+                objectDetected = true;
+                Rect rect;
+                rect.x = wl;
+                rect.y = hu;
+                rect.w = wr - wl;
+                rect.h = hd - hu;
+                for (int i = 0; i < rect.w; ++i) {
+                    setColorsAtIndex(rect.y * width + rect.x + i, 0, 255, 0);
+                    setColorsAtIndex((rect.y + rect.h) * width + rect.x + i, 0, 255, 0);
+                }
+                for (int i = 0; i < rect.h; ++i) {
+                    setColorsAtIndex((rect.y + i) * width + rect.x, 0, 255, 0);
+                    setColorsAtIndex((rect.y + i) * width + rect.x + rect.w, 0, 255, 0);
+                }
+            }
+            iteration++;
+        }
+        memcpy(imgBuffer, cpImgBuffer, 4050);
+        break;
+    }
+    }
+}
+
+void EpuckMonitor::onEdgeDetection() {
+    switch (filter) {
+    case 0: {
+        memcpy(cpImgBuffer, imgBuffer, 4050);
+        int r, g, b;
+        int indexes[5];
+        for (int i = 1; i < height - 1; ++i) {
+            for (int j = 1; j < width - 1; ++j) {
+                indexes[1] = (i - 1) * width + j;
+                indexes[2] = i * width + (j - 1);
+                indexes[0] = i * width + j;
+                indexes[3] = i * width + (j + 1);
+                indexes[4] = (i + 1) * width + j;
+                int r, g, b;
+                getColorsForIndex(indexes[0], r, g, b);
+                if (r > 40) {
+                    int counter = 0;
+                    for (int k = 0; k < 4; ++k) {
+                        getColorsForIndex(indexes[k + 1], r, g, b);
+                        if (r > 40) counter++;
+                    }
+                    if (counter != 4) {
+                        setColorsAtIndex(indexes[0], 0, 0, 255);
+                    }
+                }
             }
         }
         memcpy(imgBuffer, cpImgBuffer, 4050);
@@ -264,6 +444,9 @@ void EpuckMonitor::cameraUpdate() {
                     commThread->getImg(imgBuffer);
                     onPreFilter();
                     onColorFilter();
+                    onCustomFilter();
+                    //onEdgeDetection();
+                    onObjectIdentification();
                     img = QImage(width, height, QImage::Format_RGB16);
                     int i=0;
                     for(int y=0; y<height; y++) {
