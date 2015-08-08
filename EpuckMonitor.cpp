@@ -125,7 +125,7 @@ void EpuckMonitor::onColorFilter() {
             for (int j = 0; j < width; ++j) {
                 int r, g, b;
                 int index = i * width + j;
-                if ((i == 0 || i == height - 1) && (j == 0 || j == width - 1)) {
+                if ((i == 0 || i == height - 1) || (j == 0 || j == width - 1)) {
                     setColorsAtIndex(index, 0, 0, 0);
                 } else {
                     getColorsForIndex(index, r, g, b);
@@ -210,12 +210,9 @@ struct Rect {
     int h;
 };
 
-std::vector<Rect> objects;
-
 void EpuckMonitor::onObjectIdentification() {
     switch (filter) {
     case 0: {
-        objects.clear();
         memcpy(cpImgBuffer, imgBuffer, 4050);
         // Just one
         int iteration = 0;
@@ -229,74 +226,85 @@ void EpuckMonitor::onObjectIdentification() {
             int r, g, b;
             getColorsForIndex(index, r, g, b);
             if (r > 0) {
-                int hu = iy, wr = ix, hd = iy, wl = ix;
-                int rr = r, gr = g, br = b;
-                while (rr > 0) {
-                    hu--;
-                    if (hu > 0) {
-                        getColorsForIndex(hu * width + ix, rr, gr, br);
-                        if (rr == 0) {
+                // Here we iterate
+                int area = 0;
+                int new_area = 1;
+                Rect rect = {0, 0, 0, 0};
+                Rect new_rect = {0, 0, 1, 1};
+                while (new_area > area) {
+                    area = new_area;
+                    rect = new_rect;
+                    int hu = iy, wr = ix, hd = iy, wl = ix;
+                    int rr = r, gr = g, br = b;
+                    while (rr > 0) {
+                        hu--;
+                        if (hu > 0) {
+                            getColorsForIndex(hu * width + ix, rr, gr, br);
+                            if (rr == 0) {
+                                hu++;
+                                break;
+                            }
+                        } else {
                             hu++;
                             break;
                         }
-                    } else {
-                        hu++;
-                        break;
                     }
-                }
-                rr = r;
-                while (rr > 0) {
-                    wr++;
-                    if (wr < width - 1) {
-                        getColorsForIndex(iy * width + wr, rr, gr, br);
-                        if (rr == 0) {
+                    rr = r;
+                    while (rr > 0) {
+                        wr++;
+                        if (wr < width - 1) {
+                            getColorsForIndex(iy * width + wr, rr, gr, br);
+                            if (rr == 0) {
+                                wr--;
+                                break;
+                            }
+                        } else {
                             wr--;
                             break;
                         }
-                    } else {
-                        wr--;
-                        break;
                     }
-                }
-                rr = r;
-                while (rr > 0) {
-                    hd++;
-                    if (hd < height - 1) {
-                        getColorsForIndex(hd * width + ix, rr, gr, br);
-                        if (rr == 0) {
+                    rr = r;
+                    while (rr > 0) {
+                        hd++;
+                        if (hd < height - 1) {
+                            getColorsForIndex(hd * width + ix, rr, gr, br);
+                            if (rr == 0) {
+                                hd--;
+                                break;
+                            }
+                        } else {
                             hd--;
                             break;
                         }
-                    } else {
-                        hd--;
-                        break;
                     }
-                }
-                rr = r;
-                while (rr > 0) {
-                    wl--;
-                    if (wl > 0) {
-                        getColorsForIndex(iy * width + wl, rr, gr, br);
-                        if (rr == 0) {
+                    rr = r;
+                    while (rr > 0) {
+                        wl--;
+                        if (wl > 0) {
+                            getColorsForIndex(iy * width + wl, rr, gr, br);
+                            if (rr == 0) {
+                                wl++;
+                                break;
+                            }
+                        } else {
                             wl++;
                             break;
                         }
-                    } else {
-                        wl++;
-                        break;
                     }
+                    new_rect.x = wl;
+                    new_rect.y = hu;
+                    new_rect.w = wr - wl + 1;
+                    new_rect.h = hd - hu + 1;
+                    new_area = new_rect.w * new_rect.h;
+                    ix = new_rect.x + new_rect.w / 2;
+                    iy = new_rect.y + new_rect.h / 2;
                 }
                 objectDetected = true;
-                Rect rect;
-                rect.x = wl;
-                rect.y = hu;
-                rect.w = wr - wl;
-                rect.h = hd - hu;
-                for (int i = 0; i < rect.w; ++i) {
+                for (int i = 0; i <= rect.w; ++i) {
                     setColorsAtIndex(rect.y * width + rect.x + i, 0, 255, 0);
                     setColorsAtIndex((rect.y + rect.h) * width + rect.x + i, 0, 255, 0);
                 }
-                for (int i = 0; i < rect.h; ++i) {
+                for (int i = 0; i <= rect.h; ++i) {
                     setColorsAtIndex((rect.y + i) * width + rect.x, 0, 255, 0);
                     setColorsAtIndex((rect.y + i) * width + rect.x + rect.w, 0, 255, 0);
                 }
