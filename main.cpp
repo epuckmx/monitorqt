@@ -43,6 +43,7 @@ int main(int argc, char *argv[]) {
 	QObject::connect(main.ui.btnParameters, SIGNAL(clicked()), &main, SLOT(updateParameters()));
     QObject::connect(main.ui.btnApplyFilter, SIGNAL(clicked()), &main, SLOT(applyFilter()));
     QObject::connect(main.ui.btnApplyPreFilter, SIGNAL(clicked()), &main, SLOT(applyPreFilter()));
+    QObject::connect(main.ui.btnToggleRecord, SIGNAL(clicked()), &main, SLOT(toggleRecording()));
     QObject::connect(&main, SIGNAL(newParameters(int,int,int,int)), commThread, SLOT(updateParameters(int,int,int,int)));
 	QObject::connect(main.ui.btnUp, SIGNAL(clicked()), &main, SLOT(goUp()));
 	QObject::connect(main.ui.btnDown, SIGNAL(clicked()), &main, SLOT(goDown()));

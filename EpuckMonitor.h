@@ -49,13 +49,21 @@ class EpuckMonitor : public QMainWindow
     private:
         int filter; ///< -1: no filter, 0: red filter, 1: green filter, 2: blue filter
         int preFilter; ///< -1: no filter, 0: average, 1: median
+        bool recording;
+        int vision_cycle;
         void onPreFilter();
         void onColorFilter();
         void onCustomFilter();
         void onEdgeDetection();
+        void lookForEdges(int x, int y, int& u, int& r, int& d, int& l);
+        void inferObjects();
+        void detectObjects();
         void onObjectIdentification();
         void getColorsForIndex(int index, int& r, int& g, int& b);
         void setColorsAtIndex(int index, int r, int g, int b);
+        void setColorRedAtIndex(int index, int r);
+        void setColorBlueAtIndex(int index, int b);
+        void setColorGreenAtIndex(int index, int g);
         unsigned char cpImgBuffer[4050];
 
     public:
@@ -99,6 +107,7 @@ class EpuckMonitor : public QMainWindow
         void portOpened();
         void applyFilter();
         void applyPreFilter();
+        void toggleRecording();
 
     signals:
         void newParameters(int t, int w, int h, int z);

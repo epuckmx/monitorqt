@@ -30,7 +30,9 @@
 #include <algorithm>
 #include <stdlib.h>
 #include <time.h>
-
+#define MAX_OBJECTS 3
+#define MIN_WIDTH 5
+#define MIN_HEIGHT 5
 
 EpuckMonitor::EpuckMonitor(QMainWindow *parent) : QMainWindow(parent)
 {
@@ -46,6 +48,8 @@ EpuckMonitor::EpuckMonitor(QMainWindow *parent) : QMainWindow(parent)
     zoom = 8;
     commThread=NULL;
     isReceiving = false;
+    recording = false;
+    vision_cycle = 0;
 
     //disable all the graphical objects before the connection is established
     ui.chkSensors->setEnabled(false);
@@ -86,6 +90,7 @@ EpuckMonitor::EpuckMonitor(QMainWindow *parent) : QMainWindow(parent)
     ui.radioBlueFilter->setEnabled(false);
     ui.radioNoneFilter->setEnabled(false);
     ui.btnApplyFilter->setEnabled(false);
+    ui.btnToggleRecord->setEnabled(false);
 
     glWidget = new GLWidget;
     ui.layoutOpenGL->addWidget(glWidget);
@@ -115,6 +120,20 @@ void EpuckMonitor::getColorsForIndex(int index, int &r, int &g, int &b) {
 void EpuckMonitor::setColorsAtIndex(int index, int r, int g, int b) {
     cpImgBuffer[index * 2] = (0xF8 & (char)r) | (0x07 & ((char)g >> 5));
     cpImgBuffer[index * 2 + 1] = (0x1F & ((char)b >> 3)) | (0xE0 & ((char)g << 3));
+}
+
+void EpuckMonitor::setColorRedAtIndex(int index, int r) {
+    char byte = (char)r | 0x07;
+    imgBuffer[index * 2] &= byte;
+}
+
+void EpuckMonitor::setColorGreenAtIndex(int index, int g) {
+    return;
+}
+
+void EpuckMonitor::setColorBlueAtIndex(int index, int b) {
+    char byte = ((char)b >> 3) | 0xE0;
+    imgBuffer[index * 2 + 1] &= byte;
 }
 
 void EpuckMonitor::onColorFilter() {
@@ -210,14 +229,81 @@ struct Rect {
     int h;
 };
 
-void EpuckMonitor::onObjectIdentification() {
-    switch (filter) {
-    case 0: {
-        memcpy(cpImgBuffer, imgBuffer, 4050);
-        // Just one
-        int iteration = 0;
-        int size = width * height;
-        bool objectDetected = false;
+std::list<Rect> rects;
+
+void EpuckMonitor::lookForEdges(int ix, int iy, int &hu, int &wr, int &hd, int &wl) {
+    hu = iy;
+    wr = ix;
+    hd = iy;
+    wl = ix;
+    int r, g, b;
+    getColorsForIndex(iy * width + ix, r, g, b);
+    int rr = r, gr = g, br = b;
+    while (rr > 0) {
+        hu--;
+        if (hu > 0) {
+            getColorsForIndex(hu * width + ix, rr, gr, br);
+            if (rr == 0) {
+                hu++;
+                break;
+            }
+        } else {
+            hu++;
+            break;
+        }
+    }
+    rr = r;
+    while (rr > 0) {
+        wr++;
+        if (wr < width - 1) {
+            getColorsForIndex(iy * width + wr, rr, gr, br);
+            if (rr == 0) {
+                wr--;
+                break;
+            }
+        } else {
+            wr--;
+            break;
+        }
+    }
+    rr = r;
+    while (rr > 0) {
+        hd++;
+        if (hd < height - 1) {
+            getColorsForIndex(hd * width + ix, rr, gr, br);
+            if (rr == 0) {
+                hd--;
+                break;
+            }
+        } else {
+            hd--;
+            break;
+        }
+    }
+    rr = r;
+    while (rr > 0) {
+        wl--;
+        if (wl > 0) {
+            getColorsForIndex(iy * width + wl, rr, gr, br);
+            if (rr == 0) {
+                wl++;
+                break;
+            }
+        } else {
+            wl++;
+            break;
+        }
+    }
+}
+
+void EpuckMonitor::detectObjects() {
+    int size = width * height;
+    bool objectDetected = true;
+    int objectsDetected = 0;
+    int iteration = 0;
+    while (objectsDetected < MAX_OBJECTS && objectDetected) {
+        iteration = 0;
+        objectDetected = false;
         while (!objectDetected && iteration < size / 2) {
             int index = rand() % size;
             int ix = index % width;
@@ -235,62 +321,7 @@ void EpuckMonitor::onObjectIdentification() {
                     area = new_area;
                     rect = new_rect;
                     int hu = iy, wr = ix, hd = iy, wl = ix;
-                    int rr = r, gr = g, br = b;
-                    while (rr > 0) {
-                        hu--;
-                        if (hu > 0) {
-                            getColorsForIndex(hu * width + ix, rr, gr, br);
-                            if (rr == 0) {
-                                hu++;
-                                break;
-                            }
-                        } else {
-                            hu++;
-                            break;
-                        }
-                    }
-                    rr = r;
-                    while (rr > 0) {
-                        wr++;
-                        if (wr < width - 1) {
-                            getColorsForIndex(iy * width + wr, rr, gr, br);
-                            if (rr == 0) {
-                                wr--;
-                                break;
-                            }
-                        } else {
-                            wr--;
-                            break;
-                        }
-                    }
-                    rr = r;
-                    while (rr > 0) {
-                        hd++;
-                        if (hd < height - 1) {
-                            getColorsForIndex(hd * width + ix, rr, gr, br);
-                            if (rr == 0) {
-                                hd--;
-                                break;
-                            }
-                        } else {
-                            hd--;
-                            break;
-                        }
-                    }
-                    rr = r;
-                    while (rr > 0) {
-                        wl--;
-                        if (wl > 0) {
-                            getColorsForIndex(iy * width + wl, rr, gr, br);
-                            if (rr == 0) {
-                                wl++;
-                                break;
-                            }
-                        } else {
-                            wl++;
-                            break;
-                        }
-                    }
+                    lookForEdges(ix, iy, hu, wr, hd, wl);
                     new_rect.x = wl;
                     new_rect.y = hu;
                     new_rect.w = wr - wl + 1;
@@ -299,18 +330,113 @@ void EpuckMonitor::onObjectIdentification() {
                     ix = new_rect.x + new_rect.w / 2;
                     iy = new_rect.y + new_rect.h / 2;
                 }
-                objectDetected = true;
-                for (int i = 0; i <= rect.w; ++i) {
-                    setColorsAtIndex(rect.y * width + rect.x + i, 0, 255, 0);
-                    setColorsAtIndex((rect.y + rect.h) * width + rect.x + i, 0, 255, 0);
-                }
-                for (int i = 0; i <= rect.h; ++i) {
-                    setColorsAtIndex((rect.y + i) * width + rect.x, 0, 255, 0);
-                    setColorsAtIndex((rect.y + i) * width + rect.x + rect.w, 0, 255, 0);
+                if (rect.w >= MIN_WIDTH && rect.h >= MIN_HEIGHT) {
+                    objectDetected = true;
+                    objectsDetected++;
+                    for (int i = 0; i <= rect.w; ++i) {
+                        setColorsAtIndex(rect.y * width + rect.x + i, 0, 255, 0);
+                        setColorsAtIndex((rect.y + rect.h) * width + rect.x + i, 0, 255, 0);
+                    }
+                    for (int i = 0; i <= rect.h; ++i) {
+                        setColorsAtIndex((rect.y + i) * width + rect.x, 0, 255, 0);
+                        setColorsAtIndex((rect.y + i) * width + rect.x + rect.w, 0, 255, 0);
+                    }
+                    // Clean the current detected object
+                    for (int i = rect.x; i < rect.x + rect.w; ++i) {
+                        for (int j = rect.y; j < rect.y + rect.h; ++j) {
+                            int index = j * width + i;
+                            setColorRedAtIndex(index, 0);
+                        }
+                    }
+                    rects.push_back(rect);
                 }
             }
             iteration++;
         }
+    }
+}
+
+void EpuckMonitor::inferObjects() {
+    std::list<Rect>::iterator it = rects.begin();
+    while (it != rects.end()) {
+        int x = it->x;
+        int y = it->y;
+        int w = it->w;
+        int h = it->h;
+        int xc = x + w / 2;
+        int yc = y + h / 2;
+        int r, g, b;
+        int index = yc * width + xc;
+        getColorsForIndex(index, r, g, b);
+        if (r > 0) {
+            int area = w * h;
+            int new_area = 0;
+            while (area > new_area) {
+                new_area = area;
+                int max_i = -1;
+                int xs[4], ys[4];
+                xs[0] = xs[2] = xc - 1;
+                xs[1] = xs[3] = xc + 1;
+                ys[0] = ys[1] = yc - 1;
+                ys[2] = ys[3] = yc + 1;
+                Rect new_rects[4];
+                int areas[4];
+                int hu, wr, hd, wl;
+                for (int i = 0; i < 4; ++i) {
+                    lookForEdges(xs[i], ys[i], hu, wr, hd, wl);
+                    new_rects[i].x = wl;
+                    new_rects[i].y = hu;
+                    new_rects[i].w = wr - wl + 1;
+                    new_rects[i].h = hd - hu + 1;
+                    areas[i] = new_rects[i].w * new_rects[i].h;
+                    if (areas[i] > new_area) {
+                        new_area = areas[i];
+                        max_i = i;
+                    }
+                }
+                if (max_i > -1) {
+                    xc = xs[max_i];
+                    yc = ys[max_i];
+                    x = new_rects[max_i].x;
+                    y = new_rects[max_i].y;
+                    w = new_rects[max_i].w;
+                    h = new_rects[max_i].h;
+                }
+            }
+            it->x = x;
+            it->y = y;
+            it->w = w;
+            it->h = h;
+            // I trust that the new rect will be of width greater than MIN_WIDTH and height greater than MIN_HEIGHT
+            for (int i = 0; i <= w; ++i) {
+                setColorsAtIndex(y * width + x + i, 0, 255, 0);
+                setColorsAtIndex((y + h) * width + x + i, 0, 255, 0);
+            }
+            for (int i = 0; i <= h; ++i) {
+                setColorsAtIndex((y + i) * width + x, 0, 255, 0);
+                setColorsAtIndex((y + i) * width + x + w, 0, 255, 0);
+            }
+            // Clean the current detected object
+            for (int i = x; i < x + w; ++i) {
+                for (int j = y; j < y + h; ++j) {
+                    int index = j * width + i;
+                    setColorRedAtIndex(index, 0);
+                }
+            }
+        } else {
+            rects.erase(it++);
+        }
+    }
+}
+
+void EpuckMonitor::onObjectIdentification() {
+    switch (filter) {
+    case 0: {
+        memcpy(cpImgBuffer, imgBuffer, 4050);
+        if (rects.size() > 0) {
+            inferObjects();
+        }
+        detectObjects();
         memcpy(imgBuffer, cpImgBuffer, 4050);
         break;
     }
@@ -450,11 +576,25 @@ void EpuckMonitor::cameraUpdate() {
 
         case 1: {	// RGB565 image
                     commThread->getImg(imgBuffer);
-                    onPreFilter();
-                    onColorFilter();
-                    onCustomFilter();
+                    if (recording) {
+                        int i = 0;
+                        std::cout << vision_cycle++ << ":" << std::endl;
+                        for (int y = 0; y < height; ++y) {
+                            std::cout << "[";
+                            for (int x = 0; x < width; ++x) {
+                                int h = (int)imgBuffer[i * 2];
+                                int l = (int)imgBuffer[i * 2 + 1];
+                                std::cout << "[" << h << ", " << l << "]";
+                                i++;
+                            }
+                            std::cout << "]" << std::endl;
+                        }
+                    }
+                    //onPreFilter();
+                    //onColorFilter();
+                    //onCustomFilter();
                     //onEdgeDetection();
-                    onObjectIdentification();
+                    //onObjectIdentification();
                     img = QImage(width, height, QImage::Format_RGB16);
                     int i=0;
                     for(int y=0; y<height; y++) {
@@ -551,6 +691,10 @@ void EpuckMonitor::updateParameters() {
     emit newParameters(type, width, height, zoom);
 
     return;
+}
+
+void EpuckMonitor::toggleRecording() {
+    recording = !recording;
 }
 
 void EpuckMonitor::applyFilter() {
@@ -685,6 +829,7 @@ void EpuckMonitor::disconnect() {
     ui.radioBlueFilter->setEnabled(false);
     ui.radioNoneFilter->setEnabled(false);
     ui.btnApplyFilter->setEnabled(false);
+    ui.btnToggleRecord->setEnabled(false);
     ui.btnImage->setText("Start receiving images");
 
     return;
@@ -770,6 +915,7 @@ void EpuckMonitor::portOpened() {
     ui.radioBlueFilter->setEnabled(true);
     ui.radioNoneFilter->setEnabled(true);
     ui.btnApplyFilter->setEnabled(true);
+    ui.btnToggleRecord->setEnabled(true);
 }
 
 
